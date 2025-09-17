@@ -1,0 +1,283 @@
+
+{% comment %} {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>World Clock</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url("{% static 'accounts/1.jpg' %}") no-repeat center center fixed;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            background: rgba(211, 187, 187, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 6px 25px rgba(221, 183, 132, 0.4);
+            text-align: center;
+            width: 380px;
+        }
+
+        select, button {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            width: 100%;
+        }
+
+        button {
+            background: #121314ff;
+            color: white;
+            font-weight: bold;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🌍 World Clock</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <label>Country:</label>
+            <select name="country" onchange="this.form.submit()">
+                <option value="">--Select Country--</option>
+                {% for country in countries %}
+                    <option value="{{ country }}" {% if selected_country == country %}selected{% endif %}>
+                        {{ country }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            {% if selected_country %}
+                <label>City:</label>
+                <select name="city">
+                    {% for city in cities %}
+                        <option value="{{ city }}" {% if selected_city == city %}selected{% endif %}>
+                            {{ city }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Show Time</button>
+            {% endif %}
+        </form>
+
+        {% if current_time %}
+            <p>🕒 Current Time in <b>{{ selected_city }}, {{ selected_country }}</b></p>
+            <div class="time-display">{{ current_time }}</div>
+        {% endif %}
+    </div>
+</body>
+</html> {% endcomment %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>World Clock</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-size: cover;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        #bg-video {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+            object-fit: cover;
+            filter: brightness(70%); /* darken slightly for readability */
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            width: 420px;
+            color: #fff;
+        }
+
+        h2 {
+            font-size: 26px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: #f1f1f1;
+            text-shadow: 1px 1px 8px rgba(0,0,0,0.6);
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+            text-align: left;
+            color: #e6e6e6;
+        }
+
+        select, button {
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: none;
+            width: 100%;
+            font-size: 15px;
+        }
+
+        select {
+            background: rgba(255,255,255,0.85);
+            color: #333;
+        }
+
+        button {
+            background: linear-gradient(135deg, #18191aff, #919797ff);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+            transform: scale(1.03);
+        }
+
+        .time-display {
+            margin-top: 10px;
+            font-size: 22px;
+            font-weight: bold;
+            background: rgba(0,0,0,0.5);
+            padding: 12px;
+            border-radius: 10px;
+            display: inline-block;
+            letter-spacing: 1px;
+        }
+
+        .footer-text {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #ccc;
+        }
+         {% comment %} .logout {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .logout .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+        } {% endcomment %}
+         .navbar-custom {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            width: 98%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .navbar-custom .center {
+            text-align: center;
+            flex: 1;
+        }
+
+        .navbar-custom .btn {
+            padding: 6px 14px;
+            border-radius: 8px;
+        }
+        .logout-btn {
+            background: #271e35ff;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #e60000;
+            box-shadow: 0px 4px 12px rgba(255, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <video autoplay muted loop id="bg-video">
+        <source src="{% static 'accounts/22.mp4' %}" type="video/mp4">
+    </video>
+    <!-- Navbar -->
+    <div class="navbar-custom">
+        <div class="left"></div>
+        <div class="center">
+            <h1>👋 Welcome, {{ request.user.username }}</h1>    
+        </div>
+        <div class="right">
+            <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+        </div>
+    </div>
+
+    <!-- Logout Button -->
+    {% comment %} <div class="logout">
+        <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+    </div> {% endcomment %}
+    <div class="container">
+        <h2>🌍 World Clock</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <label>Country:</label>
+            <select name="country" onchange="this.form.submit()">
+                <option value="">--Select Country--</option>
+                {% for country in countries %}
+                    <option value="{{ country }}" {% if selected_country == country %}selected{% endif %}>
+                        {{ country }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            {% if selected_country %}
+                <label>City:</label>
+                <select name="city">
+                    {% for city in cities %}
+                        <option value="{{ city }}" {% if selected_city == city %}selected{% endif %}>
+                            {{ city }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Show Time</button>
+            {% endif %}
+        </form>
+
+        {% if current_time %}
+            <p>🕒 Current Time in <b>{{ selected_city }}, {{ selected_country }}</b></p>
+            <div class="time-display">{{ current_time }}</div>
+        {% endif %}
+
+        <div class="footer-text">⏰ Powered by Django World Clock</div>
+    </div>
+</body>
+</html>
