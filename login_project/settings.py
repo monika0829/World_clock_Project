@@ -25,7 +25,12 @@ SECRET_KEY = 'django-insecure-3a+1-==-^nab38@z6s3o-)!g%a43a_2-pvco^e++cfk&=13!)d
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "world-clock-project-i7xj.onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
+
 APPEND_SLASH = True
 LOGIN_REDIRECT_URL = 'home'   # after login → home
 LOGOUT_REDIRECT_URL = 'login' # after logout → login
